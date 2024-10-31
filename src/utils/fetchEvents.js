@@ -6,10 +6,12 @@ const fetchEvents = async () => {
     const querySnapshot = await getDocs(collection(db, "events"));
     return querySnapshot.docs.map((doc) => {
       const data = doc.data();
-      const datetime = data.datetime ? data.datetime.toDate().toLocaleString() : null;
+      const datetime = data.datetime ? data.datetime.toDate().toISOString() : null;
+      const date = data.datetime ? data.datetime.toDate().toISOString().split("T")[0] : null;
       return {
         id: doc.id,
         ...data,
+        date,
         datetime,
       };
     });
