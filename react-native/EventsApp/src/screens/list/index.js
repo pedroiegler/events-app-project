@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { View, ScrollView } from "react-native";
 import { auth, db } from "../../services/firebase";
 import fetchEvents from "../../utils/fetchEvents";
-import { Container, FiltersContainer } from "./styles";
-import EventCard from "./partials/EventCard";
-import Filters from "./partials/Filters";
-import UserProfile from "./partials/UserProfile";
+import EventCard from "../../components/EventCard";
+import Filters from "../../components/Filters";
+// import UserProfile from "./partials/UserProfile";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const Events = () => {
@@ -16,7 +15,6 @@ const Events = () => {
   const [searchDate, setSearchDate] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
   const [wallet, setWallet] = useState(0);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -62,28 +60,28 @@ const Events = () => {
     setFilteredEvents(filtered);
   }, [searchName, searchDate, searchCategory, events]);
 
-  const handleCardClick = (id) => navigate(`/event/${id}`);
+  const handleCardClick = (id) => {
+    // Navegação pode ser tratada de outra maneira, dependendo do seu setup
+  };
 
   return (
-    <Container>
-      <FiltersContainer>
-        <Filters
-          searchName={searchName}
-          searchDate={searchDate}
-          searchCategory={searchCategory}
-          onNameChange={(e) => setSearchName(e.target.value)}
-          onDateChange={(e) => setSearchDate(e.target.value)}
-          onCategoryChange={(e) => setSearchCategory(e.target.value)}
-        />
-        <UserProfile wallet={wallet} setWallet={setWallet} />
-      </FiltersContainer>
+    <View style={{ flex: 1, padding: 0, margin: 0 }}>
+      <Filters
+        searchName={searchName}
+        searchDate={searchDate}
+        searchCategory={searchCategory}
+        onNameChange={setSearchName}
+        onDateChange={setSearchDate}
+        onCategoryChange={setSearchCategory}
+      />
+      {/* <UserProfile wallet={wallet} setWallet={setWallet} /> */}
 
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "20px", padding: "20px" }}>
+      <ScrollView contentContainerStyle={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: "20px" }}>
         {filteredEvents.map((event) => (
           <EventCard key={event.id} event={event} onClick={handleCardClick} />
         ))}
-      </div>
-    </Container>
+      </ScrollView>
+    </View>
   );
 };
 
