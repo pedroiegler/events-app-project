@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, TextInput, Text, Picker, StyleSheet } from 'react-native';
+import UserProfile from "./UserProfile";
 
-const Filters = ({ searchName, searchDate, searchCategory, onNameChange, onDateChange, onCategoryChange }) => (
+const Filters = ({ searchName, searchDate, searchCategory, onNameChange, onDateChange, onCategoryChange, wallet, setWallet }) => (
   <View style={styles.container}>
     <View style={styles.filterWrapper}>
       <Text style={styles.label}>Filtrar por nome</Text>
@@ -33,12 +34,14 @@ const Filters = ({ searchName, searchDate, searchCategory, onNameChange, onDateC
         <Picker.Item label="Esporte" value="esporte" />
       </Picker>
     </View>
+    <UserProfile wallet={wallet} setWallet={setWallet} />
   </View>
 );
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    alignItems: 'flex-end',
     gap: 1,
     margin: 15
   },

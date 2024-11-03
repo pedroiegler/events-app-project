@@ -4,7 +4,6 @@ import { auth, db } from "../../services/firebase";
 import fetchEvents from "../../utils/fetchEvents";
 import EventCard from "../../components/EventCard";
 import Filters from "../../components/Filters";
-// import UserProfile from "./partials/UserProfile";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const Events = () => {
@@ -73,8 +72,8 @@ const Events = () => {
         onNameChange={setSearchName}
         onDateChange={setSearchDate}
         onCategoryChange={setSearchCategory}
+        wallet={wallet} setWallet={setWallet}
       />
-      {/* <UserProfile wallet={wallet} setWallet={setWallet} /> */}
 
       <ScrollView contentContainerStyle={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: "20px" }}>
         {filteredEvents.map((event) => (
