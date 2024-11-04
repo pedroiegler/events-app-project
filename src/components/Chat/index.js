@@ -3,7 +3,17 @@ import { db } from "../../services/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useParams } from "react-router-dom";
 import { auth } from "../../services/firebase";
-import { ChatContainer, Messages, Message, MessageContent, Timestamp, InputContainer, Input, Button } from "./styles";
+import { 
+  ChatContainer, 
+  Messages, 
+  Message, 
+  MessageContent, 
+  Timestamp, 
+  InputContainer, 
+  Input, 
+  Button 
+} from "./styles";
+import firebase from "firebase/compat/app";
 
 const Chat = () => {
   const { eventId } = useParams();
@@ -16,7 +26,7 @@ const Chat = () => {
       .collection("chats")
       .doc(eventId)
       .collection("messages")
-      .orderBy("timestamp")
+      .orderBy("timestamp", "asc")
       .onSnapshot((snapshot) =>
         setMessages(snapshot.docs.map((doc) => doc.data()))
       );
@@ -30,7 +40,7 @@ const Chat = () => {
         userId: user.uid,
         displayName: user.displayName || user.email,
         message: newMessage,
-        timestamp: new Date(),
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
       setNewMessage("");
     }
