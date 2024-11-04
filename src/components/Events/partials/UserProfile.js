@@ -31,17 +31,17 @@ const UserProfile = ({ wallet, setWallet }) => {
     setDropdownOpen(false);
   };
 
-  const fetchUserEvents = async () => {
-    if (user) {
-      const eventsRef = collection(db, "events");
-      const q = query(eventsRef, where("userId", "==", user.uid));
-      const querySnapshot = await getDocs(q);
-      const eventsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setUserEvents(eventsList);
-    }
-  };
-
   useEffect(() => {
+    const fetchUserEvents = async () => {
+      if (user) {
+        const eventsRef = collection(db, "events");
+        const q = query(eventsRef, where("userId", "==", user.uid));
+        const querySnapshot = await getDocs(q);
+        const eventsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setUserEvents(eventsList);
+      }
+    };
+
     fetchUserEvents();
   }, [user]);
 
