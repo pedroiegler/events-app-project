@@ -72,20 +72,20 @@ export default EventDetails;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
   },
   image: {
-    width: '100%',
-    height: 300,
+    width: '80%',
+    height: 400,
     maxHeight: 500,
     borderRadius: 8,
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: 20,
   },
   content: {
     flexDirection: 'column',
     gap: 20,
-    paddingHorizontal: 30,
+    width: '80%',
   },
 });

@@ -27,13 +27,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
-    fontSize: 24,
+    fontSize: 21,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 13,
   },
   detail: {
-    fontSize: 16,
-    marginBottom: 5,
+    fontSize: 15,
+    marginBottom: 6,
   },
 });
 

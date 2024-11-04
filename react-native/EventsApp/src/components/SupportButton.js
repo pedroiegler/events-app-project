@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Alert, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput, Button } from "react-native";
 import { db } from "../services/firebase";
 import { useNavigation } from "@react-navigation/native";
 
 const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) => {
   const [hasSupported, setHasSupported] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [supportAmount, setSupportAmount] = useState("");
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -23,57 +25,49 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
     checkIfSupported();
   }, [user, event]);
 
-  const handleSupportClick = async () => {
+  const handleSupportClick = () => {
     if (wallet <= 0) {
-      Alert.alert("Saldo Insuficiente", "Você não possui saldo suficiente para apoiar este evento.");
+      setModalVisible(true);
+      return;
+    }
+    
+    setModalVisible(true);
+  };
+
+  const handleSubmit = async () => {
+    if (!supportAmount || isNaN(supportAmount) || supportAmount <= 0) {
+      alert("Por favor, insira um valor válido!");
+      return;
+    }
+
+    if (Number(supportAmount) > wallet) {
+      alert("Saldo insuficiente!");
       return;
     }
 
     const amountNeeded = event.meta - event.meta_current;
+    const finalSupportAmount = Math.min(Number(supportAmount), amountNeeded);
+    const newWallet = wallet - finalSupportAmount;
 
-    Alert.prompt(
-      "Insira o valor do apoio",
-      `Valor na carteira: ${parseFloat(wallet).toFixed(2)} - Meta restante: ${parseFloat(amountNeeded).toFixed(2)}`,
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "OK",
-          onPress: async (supportAmount) => {
-            if (!supportAmount || isNaN(supportAmount) || supportAmount <= 0) {
-              Alert.alert("Erro", "Por favor, insira um valor válido!");
-              return;
-            }
-            if (supportAmount > wallet) {
-              Alert.alert("Erro", "Saldo insuficiente!");
-              return;
-            }
+    await db.collection("users").doc(user.uid).update({ wallet: newWallet });
+    setWallet(newWallet);
 
-            const finalSupportAmount = Math.min(Number(supportAmount), amountNeeded);
-            const newWallet = wallet - finalSupportAmount;
+    await db.collection("users").doc(user.uid).collection("supportedEvents").doc(event.id).set({ supported: true });
 
-            await db.collection("users").doc(user.uid).update({ wallet: newWallet });
-            setWallet(newWallet);
+    const newMetaCurrent = event.meta_current + finalSupportAmount;
+    setEvent((prevEvent) => ({ ...prevEvent, meta_current: newMetaCurrent }));
 
-            await db.collection("users").doc(user.uid).collection("supportedEvents").doc(event.id).set({ supported: true });
+    await db.collection("events").doc(event.id).update({ meta_current: newMetaCurrent });
 
-            const newMetaCurrent = event.meta_current + finalSupportAmount;
-            setEvent((prevEvent) => ({ ...prevEvent, meta_current: newMetaCurrent }));
+    setHasSupported(true);
+    
+    setModalVisible(false);
+    setSupportAmount("");
 
-            await db.collection("events").doc(event.id).update({ meta_current: newMetaCurrent });
-
-            setHasSupported(true);
-
-            Alert.alert(
-              "Sucesso!",
-              finalSupportAmount < supportAmount
-                ? `Apoio realizado com sucesso! Apenas ${finalSupportAmount.toFixed(2)} foi usado para completar a meta.`
-                : "Apoio realizado com sucesso!"
-            );
-          },
-        },
-      ],
-      "plain-text",
-      ""
+    alert(
+      finalSupportAmount < Number(supportAmount)
+        ? `Apoio realizado com sucesso! Apenas ${finalSupportAmount.toFixed(2)} foi usado para completar a meta.`
+        : "Apoio realizado com sucesso!"
     );
   };
 
@@ -97,6 +91,28 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
           Você precisa estar logado para apoiar este evento!
         </Text>
       )}
+
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Insira o valor do apoio</Text>
+            <TextInput
+              placeholder="Valor"
+              keyboardType="numeric"
+              value={supportAmount}
+              onChangeText={setSupportAmount}
+              style={styles.textInput}
+            />
+            <Button title="Enviar" onPress={handleSubmit} />
+            <Button title="Cancelar" onPress={() => setModalVisible(false)} color="red" />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -104,9 +120,10 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
-    gap: 10,
-    marginTop: 50,
+    gap: 5,
+    marginTop: 15,
   },
   buttonSupport: {
     backgroundColor: "#c5eb4a",
@@ -118,19 +135,45 @@ const styles = StyleSheet.create({
   buttonChat: {
     backgroundColor: "#b2b2b2",
     borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 25,
+    paddingVertical: 10,
+    paddingHorizontal: 28,
   },
   buttonText: {
     color: "#000",
     textTransform: "uppercase",
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "600",
     textAlign: "center",
   },
   alertText: {
     color: "red",
     textAlign: "center",
+    marginBottom: "20px"
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: 300,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    width: "100%",
+    marginBottom: 15,
   },
 });
 

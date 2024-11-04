@@ -5,6 +5,7 @@ import fetchEvents from "../../utils/fetchEvents";
 import EventCard from "../../components/EventCard";
 import Filters from "../../components/Filters";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigation } from '@react-navigation/native';
 
 const Events = () => {
   const [user] = useAuthState(auth);
@@ -14,6 +15,7 @@ const Events = () => {
   const [searchDate, setSearchDate] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
   const [wallet, setWallet] = useState(0);
+  const navigation = useNavigation(); 
 
   useEffect(() => {
     if (user) {
@@ -60,7 +62,7 @@ const Events = () => {
   }, [searchName, searchDate, searchCategory, events]);
 
   const handleCardClick = (id) => {
-    // Navegação pode ser tratada de outra maneira, dependendo do seu setup
+    navigation.navigate('EventDetails', { id });
   };
 
   return (
