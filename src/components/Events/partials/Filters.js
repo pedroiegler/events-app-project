@@ -31,6 +31,8 @@ const Filters = ({ searchName, searchDate, searchCategory, onNameChange, onDateC
         <option value="">Todas</option>
         <option value="música">Música</option>
         <option value="esporte">Esporte</option>
+        <option value="tecnologia">Tecnologia</option>
+        <option value="entretenimento">Entretenimento</option>
       </Select>
     </FilterWrapper>
   </ContainerFilter>

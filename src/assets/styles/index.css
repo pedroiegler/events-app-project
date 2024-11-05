@@ -28,5 +28,10 @@ body, html {
 }
 
 .custom-confirm-btn:hover {
-    background-color: #218838 !important;
+    background-color: #b1d63a !important;
+}
+
+.swal2-input{
+    width: 280px !important;
+    font-size: 15px !important;
 }
