@@ -52,7 +52,7 @@ const UserProfile = ({ wallet, setWallet }) => {
   return (
     <div style={{ position: "relative" }}>
       <div onClick={toggleDropdown} style={{ cursor: "pointer" }}>
-        <img src={user.photoURL} alt="User" style={{ width: "45px", height: "45px", borderRadius: "50%", marginLeft: "20px" }} />
+        <img src={user.photoURL} alt="User" style={{ width: "60px", height: "60px", borderRadius: "50%", marginLeft: "20px", border: "1px solid #fff" }} />
       </div>
       {dropdownOpen && (
         <UserDropdown 

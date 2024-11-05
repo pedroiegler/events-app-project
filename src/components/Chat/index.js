@@ -65,6 +65,7 @@ const Chat = () => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Digite sua mensagem"
+          s
         />
         <Button onClick={sendMessage}>Enviar</Button>
       </InputContainer>

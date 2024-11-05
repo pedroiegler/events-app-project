@@ -9,6 +9,14 @@ export const Container = styled.div`
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 28px;
+
+  @media (max-width: 768px) {
+    margin: 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 70px;
+  }
 `;
 
 export const Image = styled.img`
@@ -18,6 +26,11 @@ export const Image = styled.img`
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    width: 200px;
+    max-height: 300px;
+  }
 `;
 
 export const Details = styled.div`
@@ -29,6 +42,11 @@ export const Title = styled.h2`
   font-size: 30px;
   font-weight: 600;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    text-align: center;
+    font-size: 25px;
+  }
 `;
 
 export const ButtonSupport = styled.button`
@@ -64,5 +82,28 @@ export const ButtonChat = styled.button`
   &:hover{
     background-color: #a3a2a2;
     transform: scale(1.01);
+  }
+`;
+
+export const WraperInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 30px 30px;
+
+  @media (max-width: 768px) {
+    padding: 5px 0;
+  }
+`;
+
+export const WrapperButton = styled.div`
+  display: flex;
+  flex-direction: row;
+  alignItems: center;
+  gap: 10px;
+  margin-top: 40px;
+
+  @media (max-width: 768px) {
+    justify-content: center;
   }
 `;

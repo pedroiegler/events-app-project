@@ -53,6 +53,10 @@ export const InputContainer = styled.div`
   display: flex;
   padding: 10px;
   border-top: 1px solid #ccc;
+  
+  input:focus {
+    outline: none;
+  }
 `;
 
 export const Input = styled.input`

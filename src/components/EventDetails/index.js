@@ -7,7 +7,7 @@ import LoadingScreen from "./partials/LoadingScreen";
 import EventInfo from "./partials/EventInfo";
 import ProgressSection from "./partials/ProgressSection";
 import SupportButton from "./partials/SupportButton";
-import { Container } from "./styles";
+import { Container, WraperInfo } from "./styles";
 import { Image } from "./styles";
 
 const EventDetails = () => {
@@ -46,7 +46,7 @@ const EventDetails = () => {
   return (
     <Container>
       <Image src={event.image || "path/to/default-image.jpg"} alt={event.name} />
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px", padding: "40px 30px" }}>
+      <WraperInfo>
         <EventInfo event={event} />
         <ProgressSection event={event} progress={progress} />
         <SupportButton 
@@ -58,7 +58,7 @@ const EventDetails = () => {
           setEvent={setEvent} 
           progress={progress} 
         />
-      </div>
+      </WraperInfo>
     </Container>
   );
 };

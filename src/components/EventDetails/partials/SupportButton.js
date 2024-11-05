@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { ButtonSupport, ButtonChat } from "../styles";
+import { ButtonSupport, ButtonChat, WrapperButton } from "../styles";
 import { db } from "../../../services/firebase";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +26,16 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
 
   const handleSupportClick = async () => {
     if (wallet <= 0) {
-      Swal.fire("Saldo Insuficiente", "Você não possui saldo suficiente para apoiar este evento.", "error");
+      Swal.fire({
+        title: "Saldo Insuficiente",
+        text: "Você não possui saldo suficiente para apoiar este evento.",
+        icon: "error",
+        customClass: {
+            title: 'custom-title',
+            confirmButton: 'custom-confirm-btn',
+        },
+        width: '430px'
+      });      
       return;
     }
 
@@ -37,16 +46,22 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
       input: "number",
       inputLabel: `Valor na carteira: ${parseFloat(wallet).toFixed(2)} - Meta restante: ${parseFloat(amountNeeded).toFixed(2)}`,
       inputPlaceholder: "1",
-      showCancelButton: true,
+      showCancelButton: false,
+      showCloseButton: true,
       inputValidator: (value) => {
-        if (!value || isNaN(value) || value <= 0) {
-          return "Por favor, insira um valor válido!";
-        }
-        if (value > wallet) {
-          return "Saldo insuficiente!";
-        }
-        return null;
+          if (!value || isNaN(value) || value <= 0) {
+              return "Por favor, insira um valor válido!";
+          }
+          if (value > wallet) {
+              return "Saldo insuficiente!";
+          }
+          return null;
       },
+      customClass: {
+        title: 'custom-title',
+        confirmButton: 'custom-confirm-btn',
+      },
+      width: '430px'
     });
 
     if (supportAmount) {
@@ -73,18 +88,23 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
 
       setHasSupported(true);
 
-      Swal.fire(
-        "Sucesso!",
-        finalSupportAmount < supportAmount
-          ? `Apoio realizado com sucesso! Apenas ${finalSupportAmount.toFixed(2)} foi usado para completar a meta.`
-          : "Apoio realizado com sucesso!",
-        "success"
-      );
+      Swal.fire({
+        title: "Sucesso!",
+        text: finalSupportAmount < supportAmount
+            ? `Apoio realizado com sucesso! Apenas ${finalSupportAmount.toFixed(2)} foi usado para completar a meta.`
+            : "Apoio realizado com sucesso!",
+        icon: "success",
+        customClass: {
+            title: 'custom-title',
+            confirmButton: 'custom-confirm-btn',
+        },
+        width: '430px'
+      });
     }
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", marginTop: "50px" }}>
+    <WrapperButton>
       {user ? (
         <>
           {progress < 100 && (
@@ -103,7 +123,7 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
           Você precisa estar logado para apoiar este evento!
         </p>
       )}
-    </div>
+    </WrapperButton>
   );
 };
 

@@ -1,8 +1,8 @@
 import React from "react";
-import { FilterWrapper, Label, Input, Select } from "../styles";
+import { FilterWrapper, ContainerFilter, Label, Input, Select } from "../styles";
 
 const Filters = ({ searchName, searchDate, searchCategory, onNameChange, onDateChange, onCategoryChange }) => (
-  <div style={{ display: "flex", gap: "20px" }} >
+  <ContainerFilter>
     <FilterWrapper>
       <Label htmlFor="input-name-search">Filtrar por nome</Label>
       <Input
@@ -33,7 +33,7 @@ const Filters = ({ searchName, searchDate, searchCategory, onNameChange, onDateC
         <option value="esporte">Esporte</option>
       </Select>
     </FilterWrapper>
-  </div>
+  </ContainerFilter>
 );
 
 export default Filters;

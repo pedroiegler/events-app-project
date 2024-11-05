@@ -8,6 +8,25 @@
 }
   
 body, html {
+    width: 100%;
     height: 100%;
-    background-color: #f2f2f2;
+    margin: 0;
+    background-image: url('../image/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.custom-title {
+    font-size: 23px !important;
+}
+
+.custom-confirm-btn {
+    background-color: #c5eb4a !important;
+    color: black !important; 
+}
+
+.custom-confirm-btn:hover {
+    background-color: #218838 !important;
 }

@@ -61,16 +61,28 @@ export const FiltersContainer = styled.div`
   align-items: end;
   gap: 25px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 15px;
+  }
 `;
 
 export const FilterWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 `;
 
 export const Label = styled.label`
   font-size: 14px;
-  color: #555;
+  color: #fff;
   margin-bottom: 8px;
 `;
 
@@ -80,7 +92,7 @@ export const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 8px;
   outline: none;
-  width: 250px;
+  width: 100%;
   transition: border-color 0.2s ease;
   cursor: pointer;
 
@@ -90,9 +102,9 @@ export const Input = styled.input`
 `;
 
 export const Select = styled.select`
-  padding: 6px 10px;
+  padding: 7px 10px;
   font-size: 13px;
-  width: 180px;
+  width: 100%;
   border: 1px solid #ccc;
   border-radius: 8px;
   outline: none;
@@ -134,19 +146,38 @@ export const LoginButton = styled.button`
 
 export const Dropdown = styled.div`
   position: absolute;
-  top: 55px;
+  top: 65px;
   right: 5px;
   width: 200px;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 8px;
   z-index: 10;
+
+  @media (max-width: 768px) {
+    position: absolute;
+    top: 70px;
+    right: -75px;
+  }
 `;
 
 export const DropdownItem = styled.div`
   padding: 10px 20px;
+  font-size: 14px;
   cursor: pointer;
   &:hover {
     background-color: #f0f0f0;
+  }
+`;
+
+export const ContainerFilter = styled.div`
+  display: flex;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 60%;
   }
 `;
