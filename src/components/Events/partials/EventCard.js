@@ -20,7 +20,7 @@ const EventCard = ({ event, onClick }) => {
         {progress === 100 && <MetaAchievedText>META ATINGIDA</MetaAchievedText>}
       </ProgressBarContainer>
       <p style={{ textAlign: "center", marginTop: "10px" }}>
-        {event.meta_current} de {event.meta} apoios
+        {event.meta_current} de {event.meta} 💵
       </p>
     </Card>
   );

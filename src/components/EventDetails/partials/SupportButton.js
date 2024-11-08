@@ -39,23 +39,21 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
       return;
     }
 
-    const amountNeeded = event.meta - event.meta_current;
-
     const { value: supportAmount } = await Swal.fire({
       title: "Insira o valor do apoio",
       input: "number",
-      inputLabel: `Valor na carteira: ${parseFloat(wallet).toFixed(2)} - Meta restante: ${parseFloat(amountNeeded).toFixed(2)}`,
+      inputLabel: `Valor na carteira: ${parseFloat(wallet).toFixed(2)}`,
       inputPlaceholder: "1",
       showCancelButton: false,
       showCloseButton: true,
       inputValidator: (value) => {
-          if (!value || isNaN(value) || value <= 0) {
-              return "Por favor, insira um valor válido!";
-          }
-          if (value > wallet) {
-              return "Saldo insuficiente!";
-          }
-          return null;
+        if (!value || isNaN(value) || value <= 0) {
+          return "Por favor, insira um valor válido!";
+        }
+        if (value > wallet) {
+          return "Saldo insuficiente!";
+        }
+        return null;
       },
       customClass: {
         title: 'custom-title',
@@ -65,7 +63,7 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
     });
 
     if (supportAmount) {
-      const finalSupportAmount = Math.min(Number(supportAmount), amountNeeded);
+      const finalSupportAmount = Number(supportAmount);
       const newWallet = wallet - finalSupportAmount;
 
       await db.collection("users").doc(user.uid).update({
@@ -90,13 +88,11 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
 
       Swal.fire({
         title: "Sucesso!",
-        text: finalSupportAmount < supportAmount
-            ? `Apoio realizado com sucesso! Apenas ${finalSupportAmount.toFixed(2)} foi usado para completar a meta.`
-            : "Apoio realizado com sucesso!",
+        text: "Apoio realizado com sucesso!",
         icon: "success",
         customClass: {
-            title: 'custom-title',
-            confirmButton: 'custom-confirm-btn',
+          title: 'custom-title',
+          confirmButton: 'custom-confirm-btn',
         },
         width: '430px'
       });
@@ -107,11 +103,9 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
     <WrapperButton>
       {user ? (
         <>
-          {progress < 100 && (
-            <ButtonSupport onClick={handleSupportClick}>
-              APOIE
-            </ButtonSupport>
-          )}
+          <ButtonSupport onClick={handleSupportClick}>
+            APOIE
+          </ButtonSupport>
           {hasSupported && (
             <ButtonChat onClick={() => navigate(`/chat/${event.id}`)}>
               CHAT

@@ -1,7 +1,16 @@
 import React from "react";
 import { FilterWrapper, ContainerFilter, Label, Input, Select } from "../styles";
 
-const Filters = ({ searchName, searchDate, searchCategory, onNameChange, onDateChange, onCategoryChange }) => (
+const Filters = ({ 
+  searchName, 
+  searchStartDate, 
+  searchEndDate, 
+  searchCategory, 
+  onNameChange, 
+  onStartDateChange, 
+  onEndDateChange, 
+  onCategoryChange 
+}) => (
   <ContainerFilter>
     <FilterWrapper>
       <Label htmlFor="input-name-search">Filtrar por nome</Label>
@@ -13,12 +22,21 @@ const Filters = ({ searchName, searchDate, searchCategory, onNameChange, onDateC
       />
     </FilterWrapper>
     <FilterWrapper>
-      <Label htmlFor="input-date-search">Filtrar por Data</Label>
+      <Label htmlFor="input-start-date-search">Data Inicial</Label>
       <Input
         type="date"
-        value={searchDate}
-        id="input-date-search"
-        onChange={onDateChange}
+        value={searchStartDate}
+        id="input-start-date-search"
+        onChange={onStartDateChange}
+      />
+    </FilterWrapper>
+    <FilterWrapper>
+      <Label htmlFor="input-end-date-search">Data Final</Label>
+      <Input
+        type="date"
+        value={searchEndDate}
+        id="input-end-date-search"
+        onChange={onEndDateChange}
       />
     </FilterWrapper>
     <FilterWrapper>

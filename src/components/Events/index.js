@@ -13,7 +13,8 @@ const Events = () => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [searchName, setSearchName] = useState("");
-  const [searchDate, setSearchDate] = useState("");
+  const [searchStartDate, setSearchStartDate] = useState("");
+  const [searchEndDate, setSearchEndDate] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
   const [wallet, setWallet] = useState(0);
   const navigate = useNavigate();
@@ -56,11 +57,15 @@ const Events = () => {
     const filtered = events.filter((event) => {
       const matchesName = event.name.toLowerCase().includes(searchName.toLowerCase());
       const matchesCategory = searchCategory ? event.category.toLowerCase() === searchCategory.toLowerCase() : true;
-      const matchesDate = searchDate ? event.date === searchDate : true;
-      return matchesName && matchesDate && matchesCategory;
+
+      const matchesDateRange = searchStartDate && searchEndDate
+        ? new Date(event.date) >= new Date(searchStartDate) && new Date(event.date) <= new Date(searchEndDate)
+        : true;
+
+      return matchesName && matchesCategory && matchesDateRange;
     });
     setFilteredEvents(filtered);
-  }, [searchName, searchDate, searchCategory, events]);
+  }, [searchName, searchStartDate, searchEndDate, searchCategory, events]);
 
   const handleCardClick = (id) => navigate(`/event/${id}`);
 
@@ -69,10 +74,12 @@ const Events = () => {
       <FiltersContainer>
         <Filters
           searchName={searchName}
-          searchDate={searchDate}
+          searchStartDate={searchStartDate}
+          searchEndDate={searchEndDate}
           searchCategory={searchCategory}
           onNameChange={(e) => setSearchName(e.target.value)}
-          onDateChange={(e) => setSearchDate(e.target.value)}
+          onStartDateChange={(e) => setSearchStartDate(e.target.value)}
+          onEndDateChange={(e) => setSearchEndDate(e.target.value)}
           onCategoryChange={(e) => setSearchCategory(e.target.value)}
         />
         <UserProfile wallet={wallet} setWallet={setWallet} />
