@@ -15,6 +15,13 @@ const EventCard = ({ event, onClick }) => {
           style={{ width: "100%", height: "350px", objectFit: "cover", borderRadius: "8px" }}
         />
       )}
+      <div style={{ marginTop: '5px' }}>
+        <p style={{ fontSize: '15px', textTransform: 'capitalize' }}>{event.name}</p>
+        <div style={{ marginTop: '7px' }}>
+          <p style={{ fontSize: '12px' }}><strong>Data e Hora:</strong> {new Date(event.datetime).toLocaleString()}</p>
+          <p style={{ fontSize: '12px', marginTop: '3px' }}><strong>Categoria:</strong> {event.category}</p>
+        </div>
+      </div>
       <ProgressBarContainer>
         <ProgressBar progress={progress} />
         {progress === 100 && <MetaAchievedText>META ATINGIDA</MetaAchievedText>}

@@ -3,10 +3,9 @@ import styled from "styled-components";
 export const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 96vh;
   width: 100%;
   margin: auto;
-  border: 1px solid #ccc;
 `;
 
 export const Messages = styled.div`

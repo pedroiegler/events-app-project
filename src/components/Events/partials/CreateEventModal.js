@@ -6,17 +6,22 @@ const CreateEventModal = ({ onClose, onCreateEvent }) => {
     Swal.fire({
       title: "Criar Novo Evento",
       html: `
-        <input type="text" id="name" class="swal2-input" placeholder="Nome do Evento">
-        <select id="category" class="swal2-input">
-          <option value="Tecnologia">Tecnologia</option>
-          <option value="Esporte">Esporte</option>
-          <option value="Música">Música</option>
-          <option value="Entretenimento">Entretenimento</option>
-        </select>
-        <input type="date" id="date" class="swal2-input">
-        <input type="time" id="time" class="swal2-input">
-        <input type="text" id="meta" class="swal2-input" placeholder="Meta">
-        <input type="url" id="image" class="swal2-input" placeholder="URL da Imagem">
+        <div><input type="text" id="name" class="swal2-input" placeholder="Nome do Evento"></div>
+        <div style="margin-top: 10px;">
+          <select id="category" class="swal2-input">
+            <option value="Tecnologia">Tecnologia</option>
+            <option value="Esporte">Esporte</option>
+            <option value="Música">Música</option>
+            <option value="Entretenimento">Entretenimento</option>
+          </select>
+        </div>
+        <div><input type="date" id="date" class="swal2-input"></div>
+        <div><input type="time" id="time" class="swal2-input"></div>
+        <div><input type="text" id="meta" class="swal2-input" placeholder="Meta"></div>
+        <div style="margin-top: 10px;">
+          <p style="font-size: 10px;">Tamanhos ideais: 300x400 ou 600x800.</p>
+          <input type="url" id="image" class="swal2-input" style="margin-top: 5px;" placeholder="URL da Imagem">
+        </div>
       `,
       confirmButtonText: "Criar Evento",
       focusConfirm: false,
@@ -63,11 +68,11 @@ const CreateEventModal = ({ onClose, onCreateEvent }) => {
           },
           width: "430px",
         });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }
       onClose();
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
     });
   }, [onCreateEvent, onClose]);
 

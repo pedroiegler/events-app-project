@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../../services/firebase";
 import fetchEvents from "../../utils/fetchEvents";
@@ -9,9 +9,11 @@ import ProgressSection from "./partials/ProgressSection";
 import SupportButton from "./partials/SupportButton";
 import { Container, WraperInfo } from "./styles";
 import { Image } from "./styles";
+import { FaArrowLeft } from "react-icons/fa";
 
 const EventDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const [event, setEvent] = useState(null);
   const [wallet, setWallet] = useState(0);
@@ -44,22 +46,35 @@ const EventDetails = () => {
     : 0;
 
   return (
-    <Container>
-      <Image src={event.image || "path/to/default-image.jpg"} alt={event.name} />
-      <WraperInfo>
-        <EventInfo event={event} />
-        <ProgressSection event={event} progress={progress} />
-        <SupportButton 
-          user={user} 
-          wallet={wallet} 
-          setWallet={setWallet} 
-          eventId={event.id} 
-          event={event} 
-          setEvent={setEvent} 
-          progress={progress} 
-        />
-      </WraperInfo>
+    <>
+      <FaArrowLeft 
+        style={{ 
+          fontSize: '30px', 
+          color: '#fff', 
+          cursor: 'pointer', 
+          position: 'absolute', 
+          left: '15px',
+          top: '15px'
+        }} 
+        onClick={() => navigate(-1)} 
+      />
+      <Container>
+        <Image src={event.image || "path/to/default-image.jpg"} alt={event.name} />
+        <WraperInfo>
+          <EventInfo event={event} />
+          <ProgressSection event={event} progress={progress} />
+          <SupportButton 
+            user={user} 
+            wallet={wallet} 
+            setWallet={setWallet} 
+            eventId={event.id} 
+            event={event} 
+            setEvent={setEvent} 
+            progress={progress} 
+          />
+        </WraperInfo>
     </Container>
+    </>
   );
 };
 
