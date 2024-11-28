@@ -24,11 +24,12 @@ export const Image = styled.img`
   height: auto;
   max-height: 500px;
   object-fit: cover;
+  object-position: center;
   border-radius: 8px;
   margin-bottom: 20px;
 
   @media (max-width: 768px) {
-    width: 200px;
+    width: 100%;
     max-height: 300px;
   }
 `;

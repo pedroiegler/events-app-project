@@ -12,7 +12,13 @@ const EventCard = ({ event, onClick }) => {
         <img
           src={event.image}
           alt={event.name}
-          style={{ width: "100%", height: "350px", objectFit: "cover", borderRadius: "8px" }}
+          style={{
+            width: "100%",
+            height: "350px",
+            objectFit: "cover",
+            objectPosition: "center",
+            borderRadius: "8px"
+          }}
         />
       )}
       <div style={{ marginTop: '5px' }}>
@@ -27,7 +33,7 @@ const EventCard = ({ event, onClick }) => {
         {progress === 100 && <MetaAchievedText>META ATINGIDA</MetaAchievedText>}
       </ProgressBarContainer>
       <p style={{ textAlign: "center", marginTop: "10px" }}>
-        {event.meta_current} de {event.meta} 💵
+        R${event.meta_current} de R${event.meta} 💵
       </p>
     </Card>
   );

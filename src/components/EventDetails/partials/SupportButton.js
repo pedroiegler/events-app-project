@@ -3,6 +3,9 @@ import Swal from "sweetalert2";
 import { ButtonSupport, ButtonChat, WrapperButton } from "../styles";
 import { db } from "../../../services/firebase";
 import { useNavigate } from "react-router-dom";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
 
 const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) => {
   const [hasSupported, setHasSupported] = useState(false);
@@ -82,8 +85,10 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
       const newMetaCurrent = event.meta_current + finalSupportAmount;
       setEvent((prevEvent) => ({ ...prevEvent, meta_current: newMetaCurrent }));
 
-      await db.collection("events").doc(event.id).update({ meta_current: newMetaCurrent });
-
+      await db.collection("events").doc(event.id).update({
+        meta_current: newMetaCurrent,
+        supportersCount: firebase.firestore.FieldValue.increment(1),
+      });
       setHasSupported(true);
 
       Swal.fire({
