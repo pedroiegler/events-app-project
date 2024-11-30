@@ -27,6 +27,17 @@ const UserEventsModal = (userEvents) => {
         status = "Concluído";
       }
 
+      const difference = event.meta_current - event.meta;
+      const differenceLabel =
+        difference >= 0
+          ? `<span style="font-size: 14px; color: #28a745; display: block;">Superou a meta em: R$${difference.toFixed(2)}</span>`
+          : `<span style="font-size: 14px; color: #dc3545; display: block;">Falta para atingir a meta: R$${Math.abs(difference).toFixed(2)}</span>`;
+
+          
+      const additionalInfo = event.isTicketed
+        ? `<span style="font-size: 14px; color: #777; display: block;">Ingressos Gerados: ${event.ticketsGenerated || 0}</span>`
+        : `<span style="font-size: 14px; color: #777; display: block;">Pessoas que Apoiaram: ${event.uniqueSupporters || 0}</span>`;
+
       return `
         <div style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); display: flex; gap: 20px; align-items: center;">
           <div style="flex-shrink: 0; margin-right: 15px;">
@@ -41,9 +52,8 @@ const UserEventsModal = (userEvents) => {
             <span style="font-size: 14px; color: #777; display: block;">Categoria: ${event.category}</span>
             <span style="font-size: 14px; color: #777; display: block;">Meta: R$${event.meta}</span>
             <span style="font-size: 14px; color: #777; display: block;">Arrecadado: R$${event.meta_current}</span>
-            <span style="font-size: 14px; color: #777; display: block;">Apoios: ${event.supportersCount || 0}</span>
-            <span style="font-size: 14px; color: #777; display: block;">Porcentagem Mínima para Apoio: ${event.goalPercentage || 0}%</span>
-            <span style="font-size: 14px; color: #777; display: block;">Valo Mínimo para Apoio: R$${event.minSupport || 0}</span>
+            ${differenceLabel}
+            ${additionalInfo}
             <span style="font-size: 14px; color: #777; display: block;">Meta Atingida: ${percentage}%</span>
             <span style="font-size: 14px; color: ${
               status === "Concluído"

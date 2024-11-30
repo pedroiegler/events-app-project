@@ -100,10 +100,30 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent }) => {
         meta_current: newMetaCurrent,
       }));
   
-      await db.collection("events").doc(event.id).update({
-        meta_current: newMetaCurrent,
-        supportersCount: firebase.firestore.FieldValue.increment(1),
-      });
+      if (event.isTicketed) {
+        const ticketCode = Math.random().toString(36).substr(2, 9).toUpperCase();
+        await db.collection("events").doc(event.id).update({
+          meta_current: newMetaCurrent,
+          ticketsGenerated: firebase.firestore.FieldValue.increment(1),
+        });
+  
+        await db
+          .collection("users")
+          .doc(user.uid)
+          .collection("tickets")
+          .doc(ticketCode)
+          .set({
+            eventId: event.id,
+            eventName: event.name,
+            issuedAt: firebase.firestore.Timestamp.now(),
+            ticketCode,
+          });
+      } else {
+        await db.collection("events").doc(event.id).update({
+          meta_current: newMetaCurrent,
+          uniqueSupporters: firebase.firestore.FieldValue.increment(1),
+        });
+      }
   
       setHasSupported(true);
 
