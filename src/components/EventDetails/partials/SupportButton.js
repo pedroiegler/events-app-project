@@ -7,9 +7,10 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
-const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) => {
+const SupportButton = ({ user, wallet, setWallet, event, setEvent }) => {
   const [hasSupported, setHasSupported] = useState(false);
   const navigate = useNavigate();
+  const [isGoalReached, setIsGoalReached] = useState(false);
 
   useEffect(() => {
     const checkIfSupported = async () => {
@@ -27,6 +28,14 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
     checkIfSupported();
   }, [user, event]);
 
+  useEffect(() => {
+      const percentage = ((event.meta_current / event.meta) * 100).toFixed(2);
+ 
+      if (Number(percentage) >= Number(event.goalPercentage)) {
+        setIsGoalReached(true);
+      }
+  }, [event]);
+
   const handleSupportClick = async () => {
     if (wallet <= 0) {
       Swal.fire({
@@ -34,11 +43,11 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
         text: "Você não possui saldo suficiente para apoiar este evento.",
         icon: "error",
         customClass: {
-            title: 'custom-title',
-            confirmButton: 'custom-confirm-btn',
+          title: "custom-title",
+          confirmButton: "custom-confirm-btn",
         },
-        width: '430px'
-      });      
+        width: "430px",
+      });
       return;
     }
 
@@ -56,61 +65,86 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
         if (value > wallet) {
           return "Saldo insuficiente!";
         }
+        if (value < event.minSupport) {
+          return `O valor mínimo de apoio é ${event.minSupport}`;
+        }
         return null;
       },
       customClass: {
-        title: 'custom-title',
-        confirmButton: 'custom-confirm-btn',
+        title: "custom-title",
+        confirmButton: "custom-confirm-btn",
       },
-      width: '430px'
+      width: "430px",
     });
-
+  
     if (supportAmount) {
       const finalSupportAmount = Number(supportAmount);
       const newWallet = wallet - finalSupportAmount;
-
+  
       await db.collection("users").doc(user.uid).update({
         wallet: newWallet,
       });
-
       setWallet(newWallet);
-
+  
       await db
         .collection("users")
         .doc(user.uid)
         .collection("supportedEvents")
         .doc(event.id)
-        .set({ supported: true });
-
+        .set({ supported: true, supportAmount: finalSupportAmount });
+  
       const newMetaCurrent = event.meta_current + finalSupportAmount;
-      setEvent((prevEvent) => ({ ...prevEvent, meta_current: newMetaCurrent }));
-
+  
+      setEvent((prevEvent) => ({
+        ...prevEvent,
+        meta_current: newMetaCurrent,
+      }));
+  
       await db.collection("events").doc(event.id).update({
         meta_current: newMetaCurrent,
         supportersCount: firebase.firestore.FieldValue.increment(1),
       });
+  
       setHasSupported(true);
 
-      Swal.fire({
-        title: "Sucesso!",
-        text: "Apoio realizado com sucesso!",
-        icon: "success",
-        customClass: {
-          title: 'custom-title',
-          confirmButton: 'custom-confirm-btn',
-        },
-        width: '430px'
-      });
+      if (newMetaCurrent >= event.meta) {
+        setIsGoalReached(true);
+        Swal.fire({
+          title: "Meta Alcançada!",
+          text: "O evento atingiu o percentual necessário para ser concluído!",
+          icon: "success",
+          customClass: {
+            title: "custom-title",
+            confirmButton: "custom-confirm-btn",
+          },
+          width: "430px",
+        });
+      } else {
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Você apoiou o evento com sucesso!",
+          icon: "success",
+          customClass: {
+            title: "custom-title",
+            confirmButton: "custom-confirm-btn",
+          },
+          width: "430px",
+        });
+      }
     }
   };
 
   return (
     <WrapperButton>
+      {isGoalReached && (
+        <p style={{ color: "green", fontWeight: "bold", textAlign: "center" }}>
+          A porcentagem minima foi batida! Os apoios foram desativados...
+        </p>
+      )}
       {user ? (
         <>
-          <ButtonSupport onClick={handleSupportClick}>
-            APOIE
-          </ButtonSupport>
+          {!isGoalReached && <ButtonSupport onClick={handleSupportClick}>APOIE</ButtonSupport>}
+          
           {hasSupported && (
             <ButtonChat onClick={() => navigate(`/chat/${event.id}`)}>
               CHAT
@@ -118,7 +152,7 @@ const SupportButton = ({ user, wallet, setWallet, event, setEvent, progress }) =
           )}
         </>
       ) : (
-        <p style={{ color: 'red', textAlign: "center" }}>
+        <p style={{ color: "red", textAlign: "center" }}>
           Você precisa estar logado para apoiar este evento!
         </p>
       )}

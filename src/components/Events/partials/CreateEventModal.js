@@ -18,9 +18,17 @@ const CreateEventModal = ({ onClose, onCreateEvent }) => {
         <div><input type="date" id="date" class="swal2-input"></div>
         <div><input type="time" id="time" class="swal2-input"></div>
         <div><input type="text" id="meta" class="swal2-input" placeholder="Meta"></div>
+        <div><input type="number" id="min_support" class="swal2-input" placeholder="Valor mínimo de apoio"></div>
+        <div><input type="number" id="goal_percentage" class="swal2-input" placeholder="Percentual da meta para concluir"></div>
         <div style="margin-top: 10px;">
           <p style="font-size: 10px;">Tamanhos ideais: 300x400 ou 600x800.</p>
           <input type="url" id="image" class="swal2-input" style="margin-top: 5px;" placeholder="URL da Imagem">
+        </div>
+        <div style="margin-top: 10px; text-align: left;">
+          <label style="font-size: 14px !important;">
+            <input type="checkbox" id="is_ticketed" style="margin-right: 10px;">
+            Este evento será na modalidade de ingresso?
+          </label>
         </div>
       `,
       confirmButtonText: "Criar Evento",
@@ -36,10 +44,15 @@ const CreateEventModal = ({ onClose, onCreateEvent }) => {
         const category = Swal.getPopup().querySelector("#category").value;
         const date = Swal.getPopup().querySelector("#date").value;
         const time = Swal.getPopup().querySelector("#time").value;
-        const meta = parseFloat(Swal.getPopup().querySelector("#meta").value); // Converte para número
+        const meta = parseFloat(Swal.getPopup().querySelector("#meta").value);
         const image = Swal.getPopup().querySelector("#image").value;
-
-        if (!name || !category || !date || !time || isNaN(meta)) {
+        const minSupport = parseFloat(Swal.getPopup().querySelector("#min_support").value);
+        const goalPercentage = parseFloat(Swal.getPopup().querySelector("#goal_percentage").value);
+        const isTicketed = Swal.getPopup().querySelector("#is_ticketed").checked;
+      
+        if (!name || !category || !date || !time || isNaN(meta) ||
+          isNaN(minSupport) || isNaN(goalPercentage)
+        ) {
           Swal.showValidationMessage("Por favor, preencha todos os campos corretamente.");
           return;
         }
@@ -53,6 +66,9 @@ const CreateEventModal = ({ onClose, onCreateEvent }) => {
           meta,
           image,
           meta_current: 0,
+          minSupport,
+          goalPercentage,
+          isTicketed,
         };
       },
     }).then((result) => {
